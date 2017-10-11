@@ -1,17 +1,19 @@
 import cv2
 import numpy as np
 
+mouseX, mouseY  = -1, -1
 def locateMouse(event, x, y ,flags, param):
+    global mouseX, mouseY
     if event == cv2.EVENT_MOUSEMOVE:
-        print (x ,y)
+        mouseX, mouseY = x, y
 
 cap = cv2.VideoCapture()
 cap.open("rtmp://rtmp.open.ys7.com/openlive/3500ecdfeb404eb883c0fe662c5bc297.hd")
 cv2.namedWindow("success")
-# cv2.setMouseCallback('success', locateMouse)
+cv2.setMouseCallback('success', locateMouse)
 
-pts1 = np.float32([[198, 19], [923, 28], [176, 678], [918, 690]])
-pts2 = np.float32([[40, 40], [1250, 40], [40, 690], [1250, 690]])
+pts1 = np.float32([[225, 18], [918, 30], [172, 675], [943, 685]])
+pts2 = np.float32([[42, 23], [1215, 28], [60, 676], [1215, 675]])
 M = cv2.getPerspectiveTransform(pts1, pts2)
 
 while(1):
@@ -24,6 +26,8 @@ while(1):
     k = cv2.waitKey(20) & 0xFF
     if k == 27:
         break
+    elif k == ord('a'):
+        print (mouseX, mouseY)
 
 cap.release()
 cv2.destroyAllWindows()
