@@ -19,8 +19,18 @@ M = cv2.getPerspectiveTransform(pts1, pts2)
 while(1):
     _, frame = cap.read()
 
-    dst = cv2.warpPerspective(frame,M,(1280, 720))
-    cv2.imshow('success',dst)
+    # transformation
+    tramsFrame = cv2.warpPerspective(frame,M,(1280, 720))
+
+    gray = cv2.cvtColor(tramsFrame, cv2.COLOR_BGR2GRAY)
+    gray = np.float32(gray)
+    dst = cv2.cornerHarris(gray,2,3,0.04)
+    dst = cv2.dilate(dst,None)
+    tramsFrame[dst>0.01*dst.max()]=[0,0,255]
+
+    # dst = cv2.cornerHarris(dst,2,3,0.04)
+
+    cv2.imshow('success',tramsFrame)
 
 
     k = cv2.waitKey(20) & 0xFF
